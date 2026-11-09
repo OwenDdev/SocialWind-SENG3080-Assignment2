@@ -4,7 +4,7 @@ USE SocialWind;
 GO
 
 CREATE Table Users(
-	UseerID Int Primary KEY,
-	UserName varchar(255) NOT NULL,
+	userid Int Primary KEY,
+	username varchar(50) NOT NULL UNIQUE
 );
 GO
