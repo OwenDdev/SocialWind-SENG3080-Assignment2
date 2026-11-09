@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function UserPage() {
+function UserPage({ setUsername: updateUsername, setUserid }) {
     const [username, setUsername] = useState('');
 
     // adds username into the dataabase
@@ -23,6 +23,9 @@ function UserPage() {
                 //alert(data.message);
                 return;
             }
+            
+            updateUsername(data.username);
+            setUserid(data.userid);
 
             // alert(`Welcome ${data.username}! Your ID is ${data.userid}`);
 
@@ -40,6 +43,7 @@ function UserPage() {
     return(
         <div>
             <h1>Social Wind</h1>
+            
             <form onSubmit = {adduser}>
                  <label  htmlFor="fname">Username:</label>
                  <input type="text" id="fname" name="fname"  value={username} onChange={(e) => setUsername(e.target.value)}></input>

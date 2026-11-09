@@ -44,6 +44,38 @@ app.post('/api/users', async (req, res) => {
     }
 });
 
+// Add post endpoint
+app.post('/api/posts', async (req, res) => {
+    try {
+        const { postcontent, userid } = req.body;
+
+        // Check required fields
+        if (!postcontent || !postcontent.trim() || !userid) {
+            return res.status(400).json({
+                message: 'Post content and user ID are required'
+            });
+        }
+
+        const db = await pool.request()
+            .input('postcontent', sql.VarChar(500), postcontent.trim())
+            .input('userid', sql.Int, userid)
+            .query(`
+                INSERT INTO Posts (postcontent, userid)
+                OUTPUT INSERTED.*
+                VALUES (@postcontent, @userid)
+            `);
+
+        res.status(201).json(db.recordset[0]);
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: 'Server error'
+        });
+    }
+});
+
 
 // Start server after database connection
 pool.connect()
