@@ -1,9 +1,23 @@
+/*
+* FILE : USerpage.jsx
+* PROJECT : Asiignment2 backend
+* PROGRAMMER : Precious Orewen
+* FIRST VERSION : 2026-11-08
+* DESCRIPTION :
+* The function in the file act as an entry poin fo the user to the frontend of socail wind
+*/
+
 import { useState } from 'react'
 
 function UserPage({ setUsername: updateUsername, setUserid }) {
     const [username, setUsername] = useState('');
 
-    // adds username into the dataabase
+    //
+    // FUNCTION : adduser
+    // DESCRIPTION : This function adds username into the database fetching th user endpoint from the backend
+    // PARAMETERS : e
+    // RETURNS 
+    //
     async function adduser(e) {
         e.preventDefault();
         try {
@@ -20,24 +34,18 @@ function UserPage({ setUsername: updateUsername, setUserid }) {
             const data = await response.json();
 
             if (!response.ok) {
-                //alert(data.message);
+                console.log(data.message);
                 return;
             }
             
             updateUsername(data.username);
             setUserid(data.userid);
 
-            // alert(`Welcome ${data.username}! Your ID is ${data.userid}`);
 
         } catch (error) {
             console.error(error);
-            //alert('Unable to connect to server');
+            console.log('Unable to connect to server');
         }
-    }
-
-    // checks if username is already in datbase
-    function checkuser(){
-
     }
 
     return(

@@ -1,3 +1,12 @@
+/*
+* FILE : App.jsx
+* PROJECT : Asiignment2 backend
+* PROGRAMMER : Precious Orewen
+* FIRST VERSION : 2026-11-08
+* DESCRIPTION :
+* This is th base file for the frontend of social wind
+*/
+
 import { useState, useEffect } from 'react'
 
 import './App.css'

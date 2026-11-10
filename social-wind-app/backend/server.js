@@ -1,3 +1,14 @@
+/*
+* FILE : server.js
+* PROJECT : Asiignment2 backend
+* PROGRAMMER : Precious Orewen
+* FIRST VERSION : 2026-11-08
+* DESCRIPTION :
+* This file contains the server/backend of social wind.
+* Refrences: RESTful APIs in 100 seconds // build an API from scratch with node.Js express. (n.d.). Www.Youtube.Com. Retrieved November 10, 2026, from https://www.youtube.com/watch?v=-MTSQjw5DrM
+* 
+*/
+
 const express = require('express');
 const cors = require('cors');
 
@@ -9,11 +20,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+// FUNCTION : GET API endpoint
+// DESCRIPTION : check apis working
 app.get('/api', (req, res) => {
     res.send('Social Wind API is running');
 });
 
-// Add user or retrieve existing user
+
+
+// FUNCTION : POST users endpoint
+// DESCRIPTION : Add user or retrieve existing user
 app.post('/api/users', async (req, res) => {
     try {
         const { username } = req.body;
@@ -62,7 +79,8 @@ app.post('/api/users', async (req, res) => {
 });
 
 
-// Add post endpoint
+// FUNCTION : POST posts endpoint
+// DESCRIPTION : Adds posts to database
 app.post('/api/posts', async (req, res) => {
     try {
         const { postcontent, userid } = req.body;
@@ -94,7 +112,8 @@ app.post('/api/posts', async (req, res) => {
     }
 });
 
-// Get all posts
+// FUNCTION : GET posts endpoint
+// DESCRIPTION : Gets posts from the database
 app.get('/api/posts', async (req, res) => {
     try {
         const db = await pool.request()
@@ -121,6 +140,9 @@ app.get('/api/posts', async (req, res) => {
     }
 });
 
+
+// FUNCTION : POST likes endpoint
+// DESCRIPTION : Adds/removes likes to the database
 app.post('/api/likes', async (req, res) => {
     try {
         const { userid, postid } = req.body;
@@ -172,7 +194,8 @@ app.post('/api/likes', async (req, res) => {
     }
 });
 
-// Get like count for a post
+// FUNCTION : GET likes endpoint
+// DESCRIPTION : GEts the like count of a post from the database
 app.get('/api/likes/:postid', async (req, res) => {
     try {
         const postid = req.params.postid;
@@ -202,7 +225,9 @@ app.get('/api/likes/:postid', async (req, res) => {
     }
 });
 
-// Add comment endpoint
+
+// FUNCTION : POST comments endpoint
+// DESCRIPTION : Adds comments to the database
 app.post('/api/comments', async (req, res) => {
     try {
         const { commentcontent, userid, postid } = req.body;
@@ -234,7 +259,8 @@ app.post('/api/comments', async (req, res) => {
     }
 });
 
-// Get comments for a post
+// FUNCTION : GET comments endpoint
+// DESCRIPTION : gets comments from the database
 app.get('/api/comments/:postid', async (req, res) => {
     try {
         const postid = req.params.postid;
@@ -265,18 +291,9 @@ app.get('/api/comments/:postid', async (req, res) => {
     }
 });
 
-// Start server after database connection
-//pool.connect()
-//    .then(() => {
-//        app.listen(3000, () => {
-//            console.log('Server running on port 3000');
-//        });
-//    })
-//    .catch(error => {
-//        console.error('Database connection failed:', error);
-//    });
 
-if (require.main === module) {
+if (require.main === module) { 
+    // Start server after database connection
     pool.connect()
         .then(() => {
             app.listen(3000, () => {
@@ -288,5 +305,5 @@ if (require.main === module) {
         });
 }
 
-// Export app for automated testing
+// needed export app for automated testing
 module.exports = app;

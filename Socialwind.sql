@@ -1,3 +1,12 @@
+/*
+* FILE : Socialwwinf.sql
+* PROJECT : Asiignment2 backend
+* PROGRAMMER : Precious Orewen
+* FIRST VERSION : 2026-11 -08
+* DESCRIPTION :
+* This collection of sql commands are used in the backend of the socialwind server
+*/
+
 CREATE Database SocialWind;
 
 USE SocialWind;
@@ -31,7 +40,7 @@ CREATE Table Likes(
 );
 
 GO
-DROP TABLE Users;
+/*DROP TABLE Users;
 
 SELECT * FROM Users;
-SELECT * FROM Posts;
+SELECT * FROM Posts;*/

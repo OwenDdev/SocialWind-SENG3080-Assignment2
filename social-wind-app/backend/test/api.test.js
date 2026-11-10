@@ -1,3 +1,13 @@
+/*
+* FILE : api.test.jss
+* PROJECT : Asiignment2 backend
+* PROGRAMMER : Precious Orewen
+* FIRST VERSION : 2026-11-10
+* DESCRIPTION :
+* This file contains a test suite of 12 test for the server/backend of social wind utilizing chai and mocha from the tutorials 
+* Refrences: Test a node RESTful API with mocha and Chai | DigitalOcean. (n.d.). Www.Digitalocean.Com. Retrieved November 10, 2026, from https://www.digitalocean.com/community/tutorials/test-a-node-restful-api-with-mocha-and-chai
+* 
+*/
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -12,10 +22,12 @@ describe('Social Wind API Tests', function() {
 
     it('it should return API running', function(done) {
 
+        //arrange 
         chai.request(app)
+            //act
             .get('/api')
             .end(function(err, res) {
-
+                //assert
                 expect(res).to.have.status(200);
                 expect(res.text).to.equal('Social Wind API is running');
 
@@ -25,6 +37,7 @@ describe('Social Wind API Tests', function() {
 
 });
 
+// allows test connect to the database
 before(async function() {
     await pool.connect();
 });
@@ -41,11 +54,14 @@ describe('/POST users', function() {
 
         const user = {};
 
+        //arrange 
         chai.request(app)
+            //act
             .post('/api/users')
             .send(user)
             .end(function(err, res) {
-
+                
+                //assert
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('message');
 
@@ -59,11 +75,14 @@ describe('/POST users', function() {
             username: testUsername
         };
 
+        //arrange
         chai.request(app)
+            //act
             .post('/api/users')
             .send(user)
             .end(function(err, res) {
 
+                //assert
                 expect(res).to.have.status(201);
                 expect(res.body).to.have.property('userid');
                 expect(res.body.username).to.equal(user.username);
@@ -78,11 +97,14 @@ describe('/POST users', function() {
             username: testUsername
         };
 
+        //arrange
         chai.request(app)
+            //act
             .post('/api/users')
             .send(user)
             .end(function(err, res) {
-
+                
+                //assert
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('userid');
                 expect(res.body.username).to.equal(user.username);
@@ -102,11 +124,14 @@ describe('/POST post', function() {
             userid: 1
         };
 
+        //arrange
         chai.request(app)
+            //act
             .post('/api/posts')
             .send(post)
             .end(function(err, res) {
-
+                
+                //assert
                 expect(res).to.have.status(201);
                 expect(res.body).to.be.an('object');
                 expect(res.body).to.have.property('postid');
@@ -123,11 +148,14 @@ describe('/POST post', function() {
         userid: 1
     };
 
+    //arrange
     chai.request(app)
+        //act
         .post('/api/posts')
         .send(post)
         .end(function(err, res) {
-
+            
+            //assert
             expect(res).to.have.status(400);
             expect(res.body).to.be.an('object');
             expect(res.body).to.have.property('message');
@@ -141,10 +169,13 @@ describe('/POST post', function() {
 describe('/GET post', function() {
     it('it should GET all posts', function(done) {
 
+        //arrange
         chai.request(app)
+            //act
             .get('/api/posts')
             .end(function(err, res) {
-
+                
+                //assert
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.an('array');
 
@@ -158,16 +189,19 @@ describe('/POST likes', function() {
 
     it('it should like to a post', function(done) {
 
+        //arrange
         const like = {
             userid: 10,
             postid: 1
         };
 
+        //act
         chai.request(app)
             .post('/api/likes')
             .send(like)
             .end(function(err, res) {
-
+                
+                //assert
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('isliked');
 
@@ -181,10 +215,13 @@ describe('/GET like', function() {
 
     it('it should GET the likes of a post', function(done) {
 
+        //arrange
         chai.request(app)
+            //act
             .get('/api/likes/1?userid=10')
             .end(function(err, res) {
 
+                //assert
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.an('object');
                 expect(res.body).to.have.property('totalLikes');
@@ -200,16 +237,19 @@ describe('/POST comments', function() {
 
     it('it should not POST a comment without comment content', function(done) {
 
+        //arrange
         const comment = {
             userid: 1,
             postid: 1
         };
 
         chai.request(app)
+            //act
             .post('/api/comments')
             .send(comment)
             .end(function(err, res) {
 
+                //assert
                 expect(res).to.have.status(400);
                 expect(res.body).to.be.an('object');
                 expect(res.body).to.have.property('message');
@@ -220,17 +260,20 @@ describe('/POST comments', function() {
 
     it('it should POST a new comment', function(done) {
 
+        //arrange
         const comment = {
             commentcontent: 'This is a test comment',
             userid: 1,
             postid: 1
         };
-
+        
         chai.request(app)
+            //act
             .post('/api/comments')
             .send(comment)
             .end(function(err, res) {
 
+                //assert
                 expect(res).to.have.status(201);
                 expect(res.body).to.be.an('object');
                 expect(res.body).to.have.property('commentid');
@@ -248,10 +291,13 @@ describe('/GET comments', function() {
 
     it('it should GET all comments for a post', function(done) {
 
+        //arrange
         chai.request(app)
+            //act
             .get('/api/comments/1')
             .end(function(err, res) {
-
+                
+                //assert
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.an('array');
 

@@ -1,3 +1,13 @@
+/*
+* FILE : Postpage.jsx
+* PROJECT : Asiignment2 backend
+* PROGRAMMER : Precious Orewen
+* FIRST VERSION : 2026-11-08
+* DESCRIPTION :
+* The function in the file handle the frontend of socail wind were post comments and likes are displyed and made
+* Refrence: Bro Code. (2023, October 9). React tutorial for beginners [Video]. YouTube. https://www.youtube.com/watch?v=hn80mWvP-9g&list=PLZPZq0r_RZOMQArzyI32mVndGBZ3D99XQ
+*/
+
 import { useState } from 'react'
 
 function PostPage({ username, userid }) {
@@ -12,6 +22,12 @@ function PostPage({ username, userid }) {
     const [comments, setComments] = useState([]);
     const [selectedPostId, setSelectedPostId] = useState(null);
 
+    //
+    // FUNCTION : addpost
+    // DESCRIPTION : This function adds posts into the database fetching the post endpoint from the backend
+    // PARAMETERS : e
+    // RETURNS 
+    //
     async function addpost(e) {
         e.preventDefault();
 
@@ -30,20 +46,26 @@ function PostPage({ username, userid }) {
             const data = await response.json();
 
             if (!response.ok) {
-                alert(data.message);
+                console.log(data.message);
                 return;
             }
 
-            alert('Post created successfully!');
+            console.log('Post created successfully!');
 
             setPost('');
 
         } catch (error) {
             console.error(error);
-            alert('Unable to connect to server');
+            console.log('Unable to connect to server');
         }
     }
 
+    //
+    // FUNCTION : getpost
+    // DESCRIPTION : This function retrieves posts from the database fetching the GET post endpoint from the backend
+    // PARAMETERS : 
+    // RETURNS 
+    //
     async function getposts() {
     try {
         const response = await fetch('http://localhost:3000/api/posts');
@@ -51,7 +73,7 @@ function PostPage({ username, userid }) {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message);
+            console.log(data.message);
             return;
         }
 
@@ -67,6 +89,12 @@ function PostPage({ username, userid }) {
     }
 
 
+    //
+    // FUNCTION : getlike
+    // DESCRIPTION : This function retrives likes from the database fetching the likes endpoint from the backend
+    // PARAMETERS : postid
+    // RETURNS 
+    //
     async function getlike(postid) {
     try {
         const response = await fetch( `http://localhost:3000/api/likes/${postid}?userid=${userid}`);
@@ -74,7 +102,7 @@ function PostPage({ username, userid }) {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message);
+            console.log(data.message);
             return;
         }
 
@@ -93,6 +121,13 @@ function PostPage({ username, userid }) {
         }
     }
 
+    
+    //
+    // FUNCTION : addlike
+    // DESCRIPTION : This function add likes to a post and the database fetching the likes endpoint from the backend
+    // PARAMETERS : postid
+    // RETURNS 
+    //
     async function addlike(postid) {
     try {
         const response = await fetch('http://localhost:3000/api/likes', {
@@ -109,7 +144,7 @@ function PostPage({ username, userid }) {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message);
+            console.log(data.message);
             return;
         }
 
@@ -120,6 +155,12 @@ function PostPage({ username, userid }) {
         }
     }
 
+     //
+    // FUNCTION : getcomment
+    // DESCRIPTION : This function gets commnets from the database fetching the comments endpoint from the backend
+    // PARAMETERS : postid
+    // RETURNS 
+    //
     async function getcomment(postid) {
     try {
         const response = await fetch(`http://localhost:3000/api/comments/${postid}`);
@@ -127,7 +168,7 @@ function PostPage({ username, userid }) {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message);
+            console.log(data.message);
             return;
         }
 
@@ -138,6 +179,12 @@ function PostPage({ username, userid }) {
         }
     }
 
+    //
+    // FUNCTION : addcomment
+    // DESCRIPTION : This function add comment to a post and the database fetching the comments endpoint from the backend
+    // PARAMETERS : e
+    // RETURNS 
+    //
     async function addcomment(e) {
     e.preventDefault();
 
@@ -157,7 +204,7 @@ function PostPage({ username, userid }) {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message);
+            console.log(data.message);
             return;
         }
 
@@ -167,7 +214,7 @@ function PostPage({ username, userid }) {
 
         } catch (error) {
             console.error(error);
-            alert('Unable to connect to server');
+            console.log('Unable to connect to server');
         }
     }
 
@@ -243,8 +290,6 @@ function PostPage({ username, userid }) {
     const viewlike =   <> 
                         <h2 className="total likes"> this just need to show the totals likes (done by doing a summation of content in the like table tha have the id matchng this post)of a page when like including the like the user added </h2>
                         </>
-
-    
 
     return(
         <>

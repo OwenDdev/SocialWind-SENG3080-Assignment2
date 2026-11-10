@@ -1,3 +1,12 @@
+/*
+* FILE : db.js
+* PROJECT : Asiignment2 backend
+* PROGRAMMER : Precious Orewen
+* FIRST VERSION : 2026-11-08
+* DESCRIPTION :
+* This file connects the server/backend to the database of social wind.
+*/
+
 const sql = require('mssql/msnodesqlv8');
 
 const config = {
