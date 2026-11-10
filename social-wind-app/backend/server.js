@@ -158,6 +158,69 @@ app.get('/api/likes/:postid', async (req, res) => {
     }
 });
 
+// Add comment endpoint
+app.post('/api/comments', async (req, res) => {
+    try {
+        const { commentcontent, userid, postid } = req.body;
+
+        if (!commentcontent || !commentcontent.trim() || !userid || !postid) {
+            return res.status(400).json({
+                message: 'Comment, user ID and post ID are required'
+            });
+        }
+
+        const db = await pool.request()
+            .input('commentcontent', sql.VarChar(500), commentcontent.trim())
+            .input('userid', sql.Int, userid)
+            .input('postid', sql.Int, postid)
+            .query(`
+                INSERT INTO Comments (commentcontent, userid, postid)
+                OUTPUT INSERTED.*
+                VALUES (@commentcontent, @userid, @postid)
+            `);
+
+        res.status(201).json(db.recordset[0]);
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: 'Unable to add comment'
+        });
+    }
+});
+
+// Get comments for a post
+app.get('/api/comments/:postid', async (req, res) => {
+    try {
+        const postid = req.params.postid;
+
+        const db = await pool.request()
+            .input('postid', sql.Int, postid)
+            .query(`
+                SELECT
+                    Comments.commentid,
+                    Comments.commentcontent,
+                    Comments.timeofcomment,
+                    Users.username
+                FROM Comments
+                INNER JOIN Users
+                    ON Comments.userid = Users.userid
+                WHERE Comments.postid = @postid
+                ORDER BY Comments.timeofcomment DESC, Comments.commentid DESC
+            `);
+
+        res.status(200).json(db.recordset);
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: 'Unable to retrieve comments'
+        });
+    }
+});
+
 // Start server after database connection
 pool.connect()
     .then(() => {
