@@ -76,6 +76,87 @@ app.post('/api/posts', async (req, res) => {
     }
 });
 
+// Get all posts
+app.get('/api/posts', async (req, res) => {
+    try {
+        const db = await pool.request()
+            .query(`
+                SELECT
+                    Posts.postid,
+                    Posts.postcontent,
+                    Posts.timeofpost,
+                    Users.username
+                FROM Posts
+                INNER JOIN Users
+                    ON Posts.userid = Users.userid
+                ORDER BY Posts.timeofpost DESC, Posts.postid DESC
+            `);
+
+        res.status(200).json(db.recordset);
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: 'Server error'
+        });
+    }
+});
+
+app.post('/api/likes', async (req, res) => {
+    try {
+        const { userid, postid } = req.body;
+
+        if (!userid || !postid) {
+            return res.status(400).json({
+                message: 'User ID and post ID are required'
+            });
+        }
+
+        const db = await pool.request()
+            .input('userid', sql.Int, userid)
+            .input('postid', sql.Int, postid)
+            .query(`
+                INSERT INTO Likes (isliked, userid, postid)
+                VALUES (1, @userid, @postid)
+            `);
+
+        res.status(201).json({
+            message: 'Post liked successfully'
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: 'Unable to add like'
+        });
+    }
+});
+
+// Get like count for a post
+app.get('/api/likes/:postid', async (req, res) => {
+    try {
+        const postid = req.params.postid;
+
+        const db = await pool.request()
+            .input('postid', sql.Int, postid)
+            .query(`
+                SELECT COUNT(*) AS totalLikes
+                FROM Likes
+                WHERE postid = @postid AND isliked = 1
+            `);
+
+        res.status(200).json(db.recordset[0]);
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: 'Unable to retrieve likes'
+        });
+    }
+});
 
 // Start server after database connection
 pool.connect()
