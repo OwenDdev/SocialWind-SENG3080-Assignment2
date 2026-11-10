@@ -1,3 +1,4 @@
+
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../server');
@@ -32,7 +33,66 @@ after(async function() {
     await pool.close();
 });
 
+const testUsername = 'mocha_latte' + Date.now();
 
+describe('/POST users', function() {
+
+    it('it should not POST a user without a username', function(done) {
+
+        const user = {};
+
+        chai.request(app)
+            .post('/api/users')
+            .send(user)
+            .end(function(err, res) {
+
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('message');
+
+                done();
+            });
+    });
+
+    it('it should POST a new user', function(done) {
+
+        const user = {
+            username: testUsername
+        };
+
+        chai.request(app)
+            .post('/api/users')
+            .send(user)
+            .end(function(err, res) {
+
+                expect(res).to.have.status(201);
+                expect(res.body).to.have.property('userid');
+                expect(res.body.username).to.equal(user.username);
+
+                done();
+            });
+    });
+
+    it('it should return an existing user', function(done) {
+
+        const user = {
+            username: testUsername
+        };
+
+        chai.request(app)
+            .post('/api/users')
+            .send(user)
+            .end(function(err, res) {
+
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('userid');
+                expect(res.body.username).to.equal(user.username);
+
+                done();
+            });
+    });
+
+});
+ 
 describe('/POST post', function() {
 
     it('it should POST a new post adding a post to the databse', function(done) {
@@ -54,6 +114,25 @@ describe('/POST post', function() {
                 expect(res.body.userid).to.equal(post.userid);
 
                 done();
+            });
+    });
+
+    it('it should not POST a post without post content', function(done) {
+
+    const post = {
+        userid: 1
+    };
+
+    chai.request(app)
+        .post('/api/posts')
+        .send(post)
+        .end(function(err, res) {
+
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.property('message');
+
+            done();
             });
     });
    
