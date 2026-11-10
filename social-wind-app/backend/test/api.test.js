@@ -32,6 +32,7 @@ after(async function() {
     await pool.close();
 });
 
+
 describe('/POST post', function() {
 
     it('it should POST a new post adding a post to the databse', function(done) {
@@ -115,3 +116,69 @@ describe('/GET like', function() {
     });
 
 });
+
+describe('/POST comments', function() {
+
+    it('it should not POST a comment without comment content', function(done) {
+
+        const comment = {
+            userid: 1,
+            postid: 1
+        };
+
+        chai.request(app)
+            .post('/api/comments')
+            .send(comment)
+            .end(function(err, res) {
+
+                expect(res).to.have.status(400);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('message');
+
+                done();
+            });
+    });
+
+    it('it should POST a new comment', function(done) {
+
+        const comment = {
+            commentcontent: 'This is a test comment',
+            userid: 1,
+            postid: 1
+        };
+
+        chai.request(app)
+            .post('/api/comments')
+            .send(comment)
+            .end(function(err, res) {
+
+                expect(res).to.have.status(201);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('commentid');
+                expect(res.body.commentcontent).to.equal(comment.commentcontent);
+                expect(res.body.userid).to.equal(comment.userid);
+                expect(res.body.postid).to.equal(comment.postid);
+
+                done();
+            });
+    });
+
+});
+
+describe('/GET comments', function() {
+
+    it('it should GET all comments for a post', function(done) {
+
+        chai.request(app)
+            .get('/api/comments/1')
+            .end(function(err, res) {
+
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('array');
+
+                done();
+            });
+    });
+
+});
+
