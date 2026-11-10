@@ -6,6 +6,7 @@ function PostPage({ username, userid }) {
     const [posts, setPosts] = useState([]);
     
     const [likes, setLikes] = useState({});
+    const [userLikes, setUserLikes] = useState({});
 
     const [usercomment, setUsercomment] = useState('');
     const [comments, setComments] = useState([]);
@@ -68,7 +69,7 @@ function PostPage({ username, userid }) {
 
     async function getlike(postid) {
     try {
-        const response = await fetch(`http://localhost:3000/api/likes/${postid}`);
+        const response = await fetch( `http://localhost:3000/api/likes/${postid}?userid=${userid}`);
 
         const data = await response.json();
 
@@ -80,6 +81,11 @@ function PostPage({ username, userid }) {
         setLikes(previousLikes => ({
             ...previousLikes,
             [postid]: data.totalLikes
+        }));
+
+        setUserLikes(previousLikes => ({
+            ...previousLikes,
+            [postid]: data.isLiked
         }));
 
         } catch (error) {
@@ -220,6 +226,7 @@ function PostPage({ username, userid }) {
                                         }
                                         else {
                                             setSelectedPostId(post.postid);
+                                            setComments([]);
                                             getcomment(post.postid);
                                         }
                                     }}>
