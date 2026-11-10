@@ -32,7 +32,7 @@ after(async function() {
     await pool.close();
 });
 
-describe('POST Post API Test', function() {
+describe('/POST post', function() {
 
     it('it should POST a new post adding a post to the databse', function(done) {
 
@@ -58,7 +58,7 @@ describe('POST Post API Test', function() {
    
 });
 
-describe('GET Posts API Test', function() {
+describe('/GET post', function() {
     it('it should GET all posts', function(done) {
 
         chai.request(app)
@@ -67,6 +67,48 @@ describe('GET Posts API Test', function() {
 
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.an('array');
+
+                done();
+            });
+    });
+
+});
+
+describe('/POST likes', function() {
+
+    it('it should like to a post', function(done) {
+
+        const like = {
+            userid: 10,
+            postid: 1
+        };
+
+        chai.request(app)
+            .post('/api/likes')
+            .send(like)
+            .end(function(err, res) {
+
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('isliked');
+
+                done();
+            });
+    });
+
+});
+
+describe('/GET like', function() {
+
+    it('it should GET the likes of a post', function(done) {
+
+        chai.request(app)
+            .get('/api/likes/1?userid=10')
+            .end(function(err, res) {
+
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('totalLikes');
+                expect(res.body).to.have.property('isLiked');
 
                 done();
             });
